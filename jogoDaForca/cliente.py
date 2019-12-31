@@ -23,7 +23,7 @@ def playGame(s):
         if msgFlag != 0:
             msg = pkt[1].decode('utf8')
             print(msg)
-            if msg == 'server cheio capacidade maxima 3' or 'Fim de jogo!' in msg:
+            if msg ==  'Fim de jogo!' in msg:
                 break
         else:
             gameString = pkt[1].decode('utf8')
