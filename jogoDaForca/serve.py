@@ -24,7 +24,7 @@ topic = [
 
 jogos = []
 
-class Game:
+class Partida:
     word = ""
     topic = ""
     gameString = ""
@@ -44,7 +44,7 @@ class Game:
 
     def getStatus(self):
         if self.tentativas == 7:
-            return 'Voces Perderam, mais de 7 tentativa :('
+            return 'Voces Perderam as 7 tentativa :('
         elif not '_' in self.gameString:
             return 'Voce Ganhou!'
         else:
@@ -94,7 +94,7 @@ def startGame(n):
         m = random.randint(0, 2)
         topics = topic[m]
         word = words[m]
-        game = Game(word,topics)
+        game = Partida(word,topics)
         jogos.append(game)
         return (game, n)
 
@@ -104,7 +104,6 @@ def client(c):
     x = startGame(clientNumber)
 
     game, player = x
-    print (player)
     send(c, 'Esperando o jogador se conectar')
 
     while not game.full:
@@ -113,10 +112,6 @@ def client(c):
     clientNumber = 0
     send(c, 'Jogo comecou!! Boa Sorte!!')
     playerGame(c, player, game)
-
-def send(c, msg):
-    packet = bytes([len(msg)]) + bytes(msg, 'utf8')
-    c.send(packet)
 
 def send_packet(c, game):
     msgFlag = bytes([0])
@@ -134,6 +129,10 @@ def verificacao(status,game,c):
             return 1
     return 0
 
+def send(c, msg):
+    packet = bytes([len(msg)]) + bytes(msg, 'utf8')
+    c.send(packet)
+
 def playerGame(c, player, game):
     global clientNumber
 
@@ -145,7 +144,7 @@ def playerGame(c, player, game):
         status = game.getStatus()
 
         if verificacao(status,game,c) == 1:
-            break
+           break
 
         send(c, 'Seu turno!')
         send_packet(c, game)
